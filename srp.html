@@ -1,0 +1,1302 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Event Explorer - Online Registration</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        :root {
+            --primary: #0a192f;
+            --secondary: #172a45;
+            --blue: #64ffda;
+            --light-blue: #8892b0;
+            --white: #a5c6f1;
+            --red: #ff647f;
+            --green: #2ecc71;
+            --light-green: #58d68d;
+            --accent: #1e90ff;
+            --fog-opacity: 0.15;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+        
+        body {
+            background-color: var(--primary);
+            color: var(--white);
+            overflow-x: hidden;
+            position: relative;
+        }
+        
+        /* Star Animation */
+        .star {
+            position: absolute;
+            background-color: var(--white);
+            border-radius: 50%;
+            animation: twinkle var(--duration) infinite ease-in-out;
+            opacity: 0;
+            z-index: 1;
+        }
+        
+        @keyframes twinkle {
+            0% { opacity: 0; transform: scale(0.5); }
+            50% { opacity: 0.8; transform: scale(1); }
+            100% { opacity: 0; transform: scale(0.5); }
+        }
+        
+        /* Foggy Cloud Animation */
+        .cloud {
+            position: absolute;
+            border-radius: 50%;
+            opacity: var(--fog-opacity);
+            animation: float var(--duration) infinite ease-in-out;
+            z-index: 1;
+            background-color: var(--white);
+            filter: blur(5px);
+        }
+        
+        .cloud::before {
+            content: '';
+            position: absolute;
+            background-color: var(--white);
+            border-radius: 50%;
+            opacity: var(--fog-opacity);
+            filter: blur(3px);
+        }
+        
+        @keyframes float {
+            0% { transform: translateY(0) translateX(0); }
+            50% { transform: translateY(-20px) translateX(10px); }
+            100% { transform: translateY(0) translateX(0); }
+        }
+        
+        /* Moon Animation */
+        .moon {
+            position: absolute;
+            background-color: #f9f3d5;
+            border-radius: 50%;
+            box-shadow: 0 0 30px rgba(249, 243, 213, 0.2);
+            animation: glow 8s infinite alternate;
+            z-index: 1;
+        }
+        
+        @keyframes glow {
+            0% { box-shadow: 0 0 20px rgba(249, 243, 213, 0.2); }
+            100% { box-shadow: 0 0 40px rgba(249, 243, 213, 0.3); }
+        }
+        
+        /* Welcome Page */
+        .welcome-page {
+            height: 120vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 20px;
+            background-color: var(--primary);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .welcome-content {
+            z-index: 10;
+            max-width: 800px;
+            position: relative;
+        }
+        
+        .welcome-page h1 {
+            font-size: 4rem;
+            margin-bottom: 20px;
+            animation: fadeIn 2s ease-in-out;
+            color: var(--blue);
+        }
+        
+        .welcome-page p {
+            font-size: 1.2rem;
+            margin-bottom: 30px;
+            animation: fadeIn 2s ease-in-out 0.5s forwards;
+            opacity: 0;
+            color: var(--light-blue);
+        }
+        
+        .event-highlights {
+            display: flex;
+            gap: 20px;
+            margin: 40px 0;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        
+        .event-card {
+            background-color: var(--secondary);
+            padding: 20px;
+            border-radius: 10px;
+            width: 180px;
+            border-left: 3px solid var(--blue);
+            transition: all 0.3s ease;
+            z-index: 10;
+            position: relative;
+            cursor: pointer;
+            text-decoration: none;
+            color: var(--white);
+        }
+        
+        .event-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+            border-left: 3px solid var(--green);
+        }
+        
+        .event-card i {
+            font-size: 2rem;
+            color: var(--blue);
+            margin-bottom: 10px;
+        }
+        
+        .event-card h3 {
+            font-size: 1rem;
+            margin-bottom: 5px;
+        }
+        
+        .event-card p {
+            font-size: 0.8rem;
+            opacity: 0.8;
+            margin: 0;
+            animation: none;
+            opacity: 1;
+        }
+        
+        .upcoming-badge {
+            position: absolute;
+            top: -10px;
+            right: -10px;
+            background-color: var(--green);
+            color: var(--primary);
+            padding: 3px 8px;
+            border-radius: 20px;
+            font-size: 0.7rem;
+            font-weight: bold;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .btn {
+            display: inline-block;
+            padding: 15px 30px;
+            background-color: transparent;
+            color: var(--blue);
+            border: 1px solid var(--blue);
+            border-radius: 5px;
+            font-size: 1.1rem;
+            cursor: pointer;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            animation: fadeIn 2s ease-in-out 1s forwards;
+            opacity: 0;
+            position: relative;
+            overflow: hidden;
+            z-index: 10;
+        }
+        
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(100, 255, 218, 0.2), transparent);
+            transition: 0.5s;
+            z-index: -1;
+        }
+        
+        .btn:hover {
+            background-color: rgba(100, 255, 218, 0.1);
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+        }
+        
+        .btn:hover::before {
+            left: 100%;
+        }
+        
+        /* Registration Page */
+        .registration-page {
+            display: none;
+            padding: 50px 20px;
+            min-height: 100vh;
+            background-color: var(--primary);
+            position: relative;
+        }
+        
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background-color: var(--secondary);
+            border-radius: 10px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            padding: 30px;
+            position: relative;
+            overflow: hidden;
+            z-index: 10;
+        }
+        
+        .back-btn {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            background-color: transparent;
+            color: var(--blue);
+            border: 1px solid var(--blue);
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            font-size: 1.2rem;
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: all 0.3s ease;
+            z-index: 11;
+        }
+        
+        .back-btn:hover {
+            background-color: rgba(100, 255, 218, 0.1);
+            transform: rotate(360deg);
+        }
+        
+        h2 {
+            text-align: center;
+            margin-bottom: 30px;
+            color: var(--blue);
+            font-size: 2.2rem;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--blue);
+        }
+        
+        input, select, textarea {
+            width: 100%;
+            padding: 12px 15px;
+            background-color: var(--primary);
+            border: 1px solid var(--light-blue);
+            border-radius: 5px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            color: var(--white);
+        }
+        
+        input:focus, select:focus, textarea:focus {
+            border-color: var(--blue);
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(100, 255, 218, 0.2);
+        }
+        
+        .row {
+            display: flex;
+            gap: 20px;
+        }
+        
+        .col {
+            flex: 1;
+        }
+        
+        .submit-btn {
+            background-color: transparent;
+            color: var(--blue);
+            border: 1px solid var(--blue);
+            padding: 15px 30px;
+            font-size: 1.1rem;
+            border-radius: 5px;
+            cursor: pointer;
+            display: block;
+            width: 100%;
+            transition: all 0.3s ease;
+            margin-top: 20px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .submit-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(100, 255, 218, 0.2), transparent);
+            transition: 0.5s;
+        }
+        
+        .submit-btn:hover {
+            background-color: rgba(100, 255, 218, 0.1);
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+        
+        .submit-btn:hover::before {
+            left: 100%;
+        }
+        
+        /* Payment Page */
+        .payment-page {
+            display: none;
+            padding: 50px 20px;
+            min-height: 100vh;
+            background-color: var(--primary);
+            position: relative;
+        }
+        
+        .payment-options {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            margin-top: 30px;
+            justify-content: center;
+        }
+        
+        .payment-option {
+            background-color: var(--secondary);
+            border-radius: 10px;
+            padding: 20px;
+            width: 280px;
+            text-align: center;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s ease;
+            cursor: pointer;
+            border: 1px solid transparent;
+            position: relative;
+            overflow: hidden;
+            z-index: 10;
+        }
+        
+        .payment-option::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(100, 255, 218, 0.1), transparent);
+            transition: 0.5s;
+        }
+        
+        .payment-option:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
+            border-color: var(--blue);
+        }
+        
+        .payment-option:hover::before {
+            left: 100%;
+        }
+        
+        .payment-option img {
+            width: 100px;
+            height: 100px;
+            object-fit: contain;
+            margin-bottom: 15px;
+        }
+        
+        .payment-option h3 {
+            margin-bottom: 10px;
+            color: var(--blue);
+        }
+        
+        .payment-option p {
+            color: var(--light-blue);
+            font-size: 0.9rem;
+        }
+        
+        .qr-code {
+            text-align: center;
+            margin: 30px 0;
+            padding: 20px;
+            background-color: var(--primary);
+            border-radius: 10px;
+            display: inline-block;
+            border: 1px solid var(--light-blue);
+            z-index: 10;
+            position: relative;
+        }
+        
+        .qr-code img {
+            width: 200px;
+            height: 200px;
+            background-color: rgb(146, 137, 207);
+            padding: 10px;
+        }
+        
+        .price-container {
+            text-align: center;
+            margin: 20px 0;
+            z-index: 10;
+            position: relative;
+        }
+        
+        .price {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--blue);
+            display: inline-block;
+            padding: 10px 20px;
+            border-radius: 5px;
+            background-color: var(--secondary);
+            border: 1px solid var(--light-blue);
+        }
+        
+        .price::before {
+            content: "₹";
+            margin-right: 5px;
+        }
+        
+        .payment-instructions {
+            text-align: center;
+            margin: 20px 0;
+            color: var(--light-blue);
+            z-index: 10;
+            position: relative;
+        }
+        
+        /* Payment Processing Page */
+        .processing-page {
+            display: none;
+            padding: 50px 20px;
+            min-height: 100vh;
+            background-color: var(--primary);
+            position: relative;
+        }
+        
+        .processing-content {
+            max-width: 600px;
+            margin: 0 auto;
+            text-align: center;
+            background-color: var(--secondary);
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            border: 1px solid var(--light-blue);
+            z-index: 10;
+            position: relative;
+        }
+        
+        .processing-icon {
+            font-size: 3rem;
+            color: var(--blue);
+            margin-bottom: 20px;
+            animation: spin 2s linear infinite;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .processing-page h2 {
+            margin-bottom: 20px;
+            color: var(--blue);
+        }
+        
+        .processing-page p {
+            margin-bottom: 30px;
+            color: var(--light-blue);
+        }
+        
+        .redirect-message {
+            margin-top: 20px;
+            font-size: 0.9rem;
+            color: var(--light-blue);
+        }
+        
+        /* Confirmation Page */
+        .confirmation-page {
+            display: none;
+            height: 100vh;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 20px;
+            background-color: var(--primary);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .confirmation-content {
+            z-index: 10;
+            max-width: 800px;
+            background-color: var(--secondary);
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            border: 1px solid var(--light-blue);
+        }
+        
+        .confirmation-page h1 {
+            font-size: 3rem;
+            margin-bottom: 20px;
+            color: var(--blue);
+        }
+        
+        .confirmation-page p {
+            font-size: 1.2rem;
+            margin-bottom: 30px;
+            color: var(--light-blue);
+        }
+        
+        .tick-icon {
+            font-size: 5rem;
+            color: var(--blue);
+            background-color: var(--primary);
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 0 auto 30px;
+            animation: bounce 1s ease infinite alternate;
+            border: 2px solid var(--blue);
+        }
+        
+        @keyframes bounce {
+            from { transform: translateY(0); }
+            to { transform: translateY(-20px); }
+        }
+        
+        .download-ticket {
+            display: inline-block;
+            margin-top: 20px;
+            padding: 10px 20px;
+            background-color: var(--blue);
+            color: var(--primary);
+            border-radius: 5px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        
+        .download-ticket:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(100, 255, 218, 0.4);
+        }
+        
+        /* Countdown Timer */
+        .countdown {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin: 30px 0;
+        }
+        
+        .countdown-item {
+            background-color: var(--secondary);
+            padding: 15px;
+            border-radius: 5px;
+            min-width: 80px;
+            border: 1px solid var(--light-blue);
+        }
+        
+        .countdown-number {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--blue);
+        }
+        
+        .countdown-label {
+            font-size: 0.8rem;
+            color: var(--light-blue);
+            text-transform: uppercase;
+        }
+        
+        /* Event Details Page */
+        .event-details-page {
+            display: none;
+            padding: 50px 20px;
+            min-height: 100vh;
+            background-color: var(--primary);
+            position: relative;
+        }
+        
+        .event-details {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: var(--secondary);
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            position: relative;
+            z-index: 10;
+        }
+        
+        .event-details h2 {
+            color: var(--blue);
+            margin-bottom: 20px;
+            text-align: left;
+        }
+        
+        .event-image {
+            width: 100%;
+            height: 300px;
+            object-fit: cover;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+        
+        .event-info {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+        
+        .info-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .info-item i {
+            color: var(--blue);
+        }
+        
+        .register-event-btn {
+            background-color: var(--blue);
+            color: var(--primary);
+            border: none;
+            padding: 12px 25px;
+            border-radius: 5px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 20px;
+        }
+        
+        .register-event-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(100, 255, 218, 0.4);
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .welcome-page h1 {
+                font-size: 2.5rem;
+            }
+            
+            .row {
+                flex-direction: column;
+                gap: 0;
+            }
+            
+            .payment-options {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .payment-option {
+                width: 100%;
+                max-width: 300px;
+            }
+            
+            .event-highlights {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .event-card {
+                width: 100%;
+                max-width: 250px;
+            }
+            
+            .event-details h2 {
+                text-align: center;
+            }
+            
+            .event-info {
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Welcome Page -->
+    <div class="welcome-page" id="welcomePage">
+        <div class="welcome-content">
+            <h1>Welcome to Event Explorer</h1>
+            <p>Discover and register for exciting events around you. Join thousands of participants in unforgettable experiences.</p>
+            
+            <h3 style="margin-bottom: 20px; color: var(--blue);">Upcoming Events</h3>
+            <div class="event-highlights">
+                <a href="#" class="event-card" data-event="tech-conference">
+                    <div class="upcoming-badge">UPCOMING</div>
+                    <i class="fas fa-laptop-code"></i>
+                    <h3>Tech Conference</h3>
+                    <p>April 5-7, 2024</p>
+                </a>
+                
+                <a href="#" class="event-card" data-event="music-festival">
+                    <div class="upcoming-badge">UPCOMING</div>
+                    <i class="fas fa-music"></i>
+                    <h3>Music Festival</h3>
+                    <p>March 15-17, 2024</p>
+                </a>
+                
+                <a href="#" class="event-card" data-event="art-exhibition">
+                    <div class="upcoming-badge">UPCOMING</div>
+                    <i class="fas fa-paint-brush"></i>
+                    <h3>Art Exhibition</h3>
+                    <p>May 10-25, 2024</p>
+                </a>
+                
+                <a href="#" class="event-card" data-event="food-fair">
+                    <div class="upcoming-badge">UPCOMING</div>
+                    <i class="fas fa-utensils"></i>
+                    <h3>Food Fair</h3>
+                    <p>June 8-10, 2024</p>
+                </a>
+                
+                <a href="#" class="event-card" data-event="business-summit">
+                    <div class="upcoming-badge">UPCOMING</div>
+                    <i class="fas fa-chart-line"></i>
+                    <h3>Business Summit</h3>
+                    <p>July 12-14, 2024</p>
+                </a>
+            </div>
+            
+            <a href="#" class="btn" id="registerBtn">Register Here <i class="fas fa-arrow-right"></i></a>
+        </div>
+    </div>
+    
+    <!-- Event Details Page -->
+    <div class="event-details-page" id="eventDetailsPage">
+        <div class="event-details">
+            <button class="back-btn" id="backBtnEvent"><i class="fas fa-arrow-left"></i></button>
+            <h2 id="eventDetailTitle">Event Title</h2>
+            <img src="" alt="Event Image" class="event-image" id="eventDetailImage">
+            <div class="event-info">
+                <div class="info-item">
+                    <i class="fas fa-calendar-alt"></i>
+                    <span id="eventDetailDate">Date</span>
+                </div>
+                <div class="info-item">
+                    <i class="fas fa-map-marker-alt"></i>
+                    <span id="eventDetailLocation">Location</span>
+                </div>
+                <div class="info-item">
+                    <i class="fas fa-rupee-sign"></i>
+                    <span id="eventDetailPrice">Price</span>
+                </div>
+            </div>
+            <p id="eventDetailDescription">Event description goes here...</p>
+            <button class="register-event-btn" id="registerEventBtn">Register Now</button>
+        </div>
+    </div>
+    
+    <!-- Registration Page -->
+    <div class="registration-page" id="registrationPage">
+        <div class="container">
+            <button class="back-btn" id="backBtn1"><i class="fas fa-arrow-left"></i></button>
+            <h2>Event Registration</h2>
+            
+            <form id="registrationForm">
+                <div class="row">
+                    <div class="col">
+                        <div class="form-group">
+                            <label for="firstName">First Name</label>
+                            <input type="text" id="firstName" required>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="form-group">
+                            <label for="lastName">Last Name</label>
+                            <input type="text" id="lastName" required>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="email">Email Address</label>
+                    <input type="email" id="email" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="phone">Phone Number</label>
+                    <input type="tel" id="phone" required>
+                </div>
+                
+                <div class="form-group">
+                    
+                    <label for="event">Select Event</label>
+                            <select id="event" required>
+                                <option value="">-- Select an Event --</option>
+                                <option value="hackathon">Hackathon</option>
+                                <option value="tech-conference">Tech-conference</option>
+                                <option value="laser-litt">Lasre-litt</option>
+                                <option value="treasure hunt">Treasure hunt</option>
+                                <option value="expo project">Expo project</option>
+                                <option value="hackathon">hackathon</option>
+                                <option value="music-festival">Music Festival</option>
+                                <option value="business-summit">Business Summit</option>
+                                <option value="art-exhibition">Art Exhibition</option>
+                                <option value="food-fair">Food Fair</option>
+                            </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="tickets">Number of Tickets</label>
+                    <input type="number" id="tickets" min="1" max="10" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="specialRequests">Special Requests</label>
+                    <textarea id="specialRequests" rows="3"></textarea>
+                </div>
+                
+                <button type="submit" class="submit-btn">Proceed to Payment <i class="fas fa-credit-card"></i></button>
+            </form>
+        </div>
+    </div>
+    
+    <!-- Payment Page -->
+    <div class="payment-page" id="paymentPage">
+        <div class="container">
+            <button class="back-btn" id="backBtn2"><i class="fas fa-arrow-left"></i></button>
+            <h2>Payment Options</h2>
+            
+            <div class="price-container">
+                <div class="price">1500</div>
+            </div>
+            
+            <div class="payment-instructions">
+                <p>Complete your registration by making the payment using any of the following methods</p>
+            </div>
+            
+            <div style="text-align: center;">
+                <div class="qr-code">
+                    <img src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=https://eventexplorer.com/pay/12345" alt="QR Code for Payment">
+                    <p>Scan this QR code to make payment</p>
+                </div>
+            </div>
+            
+            <div class="payment-options">
+                <div class="payment-option" id="phonePay">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/09/PhonePe_Logo.svg/2560px-PhonePe_Logo.svg.png" alt="PhonePe">
+                    <h3>PhonePe</h3>
+                    <p>Pay using your PhonePe wallet or linked bank account</p>
+                </div>
+                
+                <div class="payment-option" id="googlePay">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/7/78/Google_Pay_%28GPay%29_Logo.svg/2560px-Google_Pay_%28GPay%29_Logo.svg.png" alt="Google Pay">
+                    <h3>Google Pay</h3>
+                    <p>Fast and secure payments with Google Pay</p>
+                </div>
+                
+                <div class="payment-option" id="paytm">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/42/Paytm_logo.png/640px-Paytm_logo.png" alt="Paytm">
+                    <h3>Paytm</h3>
+                    <p>Use your Paytm wallet or UPI for payment</p>
+                </div>
+                
+                <div class="payment-option" id="card">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/b/b7/MasterCard_Logo.svg/2560px-MasterCard_Logo.svg.png" alt="Credit Card">
+                    <h3>Credit/Debit Card</h3>
+                    <p>Pay using Visa, Mastercard, or other cards</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Payment Processing Page -->
+    <div class="processing-page" id="processingPage">
+        <div class="processing-content">
+            <div class="processing-icon">
+                <i class="fas fa-circle-notch"></i>
+            </div>
+            <h2>Processing Payment</h2>
+            <p>Please wait while we process your payment...</p>
+            <div class="redirect-message" id="redirectMessage"></div>
+        </div>
+    </div>
+    
+    <!-- Confirmation Page -->
+    <div class="confirmation-page" id="confirmationPage">
+        <div class="confirmation-content">
+            <div class="tick-icon"><i class="fas fa-check"></i></div>
+            <h1>Registration Successful!</h1>
+            <p>Thank you for registering. Your payment has been received and your tickets have been emailed to you.</p>
+            
+            <div class="countdown">
+                <div class="countdown-item">
+                    <div class="countdown-number" id="days">00</div>
+                    <div class="countdown-label">Days</div>
+                </div>
+                <div class="countdown-item">
+                    <div class="countdown-number" id="hours">00</div>
+                    <div class="countdown-label">Hours</div>
+                </div>
+                <div class="countdown-item">
+                    <div class="countdown-number" id="minutes">00</div>
+                    <div class="countdown-label">Minutes</div>
+                </div>
+                <div class="countdown-item">
+                    <div class="countdown-number" id="seconds">00</div>
+                    <div class="countdown-label">Seconds</div>
+                </div>
+            </div>
+            
+            <a href="#" class="download-ticket"><i class="fas fa-download"></i> Download Ticket</a>
+            <a href="#" class="btn" id="homeBtn">Back to Home</a>
+        </div>
+    </div>
+    
+    <script>
+        // Event data
+        const events = {
+            'tech-conference': {
+                title: 'Tech Conference 2024',
+                date: 'April 5-7, 2024',
+                location: 'Bangalore Convention Center',
+                price: '₹1500 per ticket',
+                description: 'Join us for the biggest tech conference of the year featuring top industry speakers, workshops, and networking opportunities. Learn about the latest trends in AI, Blockchain, and Cloud Computing.',
+                image: 'https://images.unsplash.com/photo-1497366811353-6870744d04b2?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80'
+            },
+            'music-festival': {
+                title: 'Music Festival',
+                date: 'March 15-17, 2024',
+                location: 'Mumbai Grounds',
+                price: '₹2000 per ticket',
+                description: 'Experience three days of non-stop music with top national and international artists across multiple genres. Food stalls, merchandise, and camping options available.',
+                image: 'https://images.unsplash.com/photo-1470229722913-7c0e2dbbafd3?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80'
+            },
+            'art-exhibition': {
+                title: 'Contemporary Art Exhibition',
+                date: 'May 10-25, 2024',
+                location: 'National Art Gallery, Delhi',
+                price: '₹500 per ticket',
+                description: 'Explore works from emerging and established artists in this curated exhibition showcasing contemporary Indian art across various mediums.',
+                image: 'https://images.unsplash.com/photo-1536922246289-88c42f957773?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80'
+            },
+            'food-fair': {
+                title: 'International Food Fair',
+                date: 'June 8-10, 2024',
+                location: 'Chennai Trade Center',
+                price: '₹300 entry, food priced separately',
+                description: 'Taste culinary delights from around the world with over 100 food stalls representing different countries and cultures. Cooking demonstrations and competitions throughout the event.',
+                image: 'https://images.unsplash.com/photo-1504674900247-0877df9cc836?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80'
+            },
+            'business-summit': {
+                title: 'Business Leadership Summit',
+                date: 'July 12-14, 2024',
+                location: 'Hyderabad International Convention Center',
+                price: '₹2500 per ticket',
+                description: 'Learn from top business leaders and entrepreneurs about strategies for growth, innovation, and leadership in the digital age. Networking opportunities with industry peers.',
+                image: 'https://images.unsplash.com/photo-1522071820081-009f0129c71c?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80'
+            }
+        };
+        
+        // Payment app URLs
+        const paymentAppUrls = {
+            'phonePe': 'https://www.phonepe.com/',
+            'googlePay': 'https://pay.google.com/',
+            'paytm': 'https://paytm.com/',
+            'card': 'https://www.visa.co.in/'
+        };
+        
+        // Create animated elements
+        function createAnimatedElements() {
+            // Create stars
+            for (let i = 0; i < 150; i++) {
+                createStar();
+            }
+            
+            // Create foggy clouds
+            for (let i = 0; i < 12; i++) {
+                createCloud();
+            }
+            
+            // Create moon
+            createMoon();
+        }
+        
+        function createStar() {
+            const star = document.createElement('div');
+            star.classList.add('star');
+            
+            // Random properties
+            const size = Math.random() * 3 + 1;
+            const duration = Math.random() * 3 + 2;
+            const delay = Math.random() * 5;
+            const x = Math.random() * window.innerWidth;
+            const y = Math.random() * window.innerHeight;
+            
+            star.style.width = `${size}px`;
+            star.style.height = `${size}px`;
+            star.style.left = `${x}px`;
+            star.style.top = `${y}px`;
+            star.style.setProperty('--duration', `${duration}s`);
+            star.style.animationDelay = `${delay}s`;
+            
+            document.body.appendChild(star);
+        }
+        
+        function createCloud() {
+            const cloud = document.createElement('div');
+            cloud.classList.add('cloud');
+            
+            // Random properties
+            const size = Math.random() * 200 + 100;
+            const duration = Math.random() * 30 + 30;
+            const delay = Math.random() * 10;
+            const x = Math.random() * window.innerWidth;
+            const y = Math.random() * (window.innerHeight / 1.5);
+            
+            cloud.style.width = `${size}px`;
+            cloud.style.height = `${size/3}px`;
+            cloud.style.left = `${x}px`;
+            cloud.style.top = `${y}px`;
+            cloud.style.setProperty('--duration', `${duration}s`);
+            cloud.style.animationDelay = `${delay}s`;
+            cloud.style.opacity = `calc(var(--fog-opacity) * ${Math.random() + 0.5})`;
+            
+            // Create cloud parts
+            for (let i = 0; i < 5; i++) {
+                const part = document.createElement('div');
+                part.style.position = 'absolute';
+                part.style.backgroundColor = 'white';
+                part.style.borderRadius = '50%';
+                part.style.opacity = 'var(--fog-opacity)';
+                part.style.filter = 'blur(8px)';
+                
+                const partSize = size * (0.2 + Math.random() * 0.4);
+                part.style.width = `${partSize}px`;
+                part.style.height = `${partSize}px`;
+                
+                const partX = (i - 2) * (size / 4);
+                const partY = -partSize * 0.1 + (Math.random() * 20);
+                
+                part.style.left = `${partX}px`;
+                part.style.top = `${partY}px`;
+                
+                cloud.appendChild(part);
+            }
+            
+            document.body.appendChild(cloud);
+        }
+        
+        function createMoon() {
+            const moon = document.createElement('div');
+            moon.classList.add('moon');
+            
+            const size = 80;
+            const x = window.innerWidth - size - 50;
+            const y = 50;
+            
+            moon.style.width = `${size}px`;
+            moon.style.height = `${size}px`;
+            moon.style.left = `${x}px`;
+            moon.style.top = `${y}px`;
+            
+            document.body.appendChild(moon);
+        }
+        
+        // Countdown timer
+        function updateCountdown() {
+            const now = new Date();
+            const eventDate = new Date();
+            eventDate.setDate(now.getDate() + 7); // 7 days from now
+            
+            const diff = eventDate - now;
+            
+            const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+            
+            document.getElementById('days').textContent = days.toString().padStart(2, '0');
+            document.getElementById('hours').textContent = hours.toString().padStart(2, '0');
+            document.getElementById('minutes').textContent = minutes.toString().padStart(2, '0');
+            document.getElementById('seconds').textContent = seconds.toString().padStart(2, '0');
+        }
+        
+        // Page navigation
+        document.addEventListener('DOMContentLoaded', function() {
+            createAnimatedElements();
+            
+            const welcomePage = document.getElementById('welcomePage');
+            const eventDetailsPage = document.getElementById('eventDetailsPage');
+            const registrationPage = document.getElementById('registrationPage');
+            const paymentPage = document.getElementById('paymentPage');
+            const processingPage = document.getElementById('processingPage');
+            const confirmationPage = document.getElementById('confirmationPage');
+            
+            const registerBtn = document.getElementById('registerBtn');
+            const backBtnEvent = document.getElementById('backBtnEvent');
+            const backBtn1 = document.getElementById('backBtn1');
+            const backBtn2 = document.getElementById('backBtn2');
+            const homeBtn = document.getElementById('homeBtn');
+            const registrationForm = document.getElementById('registrationForm');
+            const registerEventBtn = document.getElementById('registerEventBtn');
+            
+            // Payment option buttons
+            const phonePay = document.getElementById('phonePay');
+            const googlePay = document.getElementById('googlePay');
+            const paytm = document.getElementById('paytm');
+            const card = document.getElementById('card');
+            
+            // Event cards
+            const eventCards = document.querySelectorAll('.event-card');
+            
+            // Set up event listeners for event cards
+            eventCards.forEach(card => {
+                card.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const eventId = this.getAttribute('data-event');
+                    showEventDetails(eventId);
+                });
+            });
+            
+            // Show event details
+            function showEventDetails(eventId) {
+                const event = events[eventId];
+                if (event) {
+                    document.getElementById('eventDetailTitle').textContent = event.title;
+                    document.getElementById('eventDetailImage').src = event.image;
+                    document.getElementById('eventDetailDate').textContent = event.date;
+                    document.getElementById('eventDetailLocation').textContent = event.location;
+                    document.getElementById('eventDetailPrice').textContent = event.price;
+                    document.getElementById('eventDetailDescription').textContent = event.description;
+                    
+                    welcomePage.style.display = 'none';
+                    eventDetailsPage.style.display = 'block';
+                }
+            }
+            
+            // Register for event from details page
+            registerEventBtn.addEventListener('click', function() {
+                const eventTitle = document.getElementById('eventDetailTitle').textContent;
+                document.getElementById('eventDisplay').value = eventTitle;
+                
+                // Find the event ID that matches the title
+                let eventId = '';
+                for (const [key, value] of Object.entries(events)) {
+                    if (value.title === eventTitle) {
+                        eventId = key;
+                        break;
+                    }
+                }
+                
+                if (eventId) {
+                    document.getElementById('event').value = eventId;
+                    eventDetailsPage.style.display = 'none';
+                    registrationPage.style.display = 'block';
+                }
+            });
+            
+            // Back button from event details
+            backBtnEvent.addEventListener('click', function(e) {
+                e.preventDefault();
+                eventDetailsPage.style.display = 'none';
+                welcomePage.style.display = 'flex';
+            });
+            
+            registerBtn.addEventListener('click', function(e) {
+                e.preventDefault();
+                welcomePage.style.display = 'none';
+                registrationPage.style.display = 'block';
+            });
+            
+            backBtn1.addEventListener('click', function(e) {
+                e.preventDefault();
+                registrationPage.style.display = 'none';
+                welcomePage.style.display = 'flex';
+            });
+            
+            backBtn2.addEventListener('click', function(e) {
+                e.preventDefault();
+                paymentPage.style.display = 'none';
+                registrationPage.style.display = 'block';
+            });
+            
+            homeBtn.addEventListener('click', function(e) {
+                e.preventDefault();
+                confirmationPage.style.display = 'none';
+                welcomePage.style.display = 'flex';
+            });
+            
+            registrationForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                registrationPage.style.display = 'none';
+                paymentPage.style.display = 'block';
+            });
+            
+            // Payment option click handlers
+            phonePay.addEventListener('click', function() {
+                processPayment('PhonePe', paymentAppUrls.phonePe);
+            });
+            
+            googlePay.addEventListener('click', function() {
+                processPayment('Google Pay', paymentAppUrls.googlePay);
+            });
+            
+            paytm.addEventListener('click', function() {
+                processPayment('Paytm', paymentAppUrls.paytm);
+            });
+            
+            card.addEventListener('click', function() {
+                processPayment('Credit/Debit Card', paymentAppUrls.card);
+            });
+            
+            function processPayment(method, redirectUrl) {
+                // Show processing page
+                paymentPage.style.display = 'none';
+                processingPage.style.display = 'block';
+                
+                // Show redirect message
+                document.getElementById('redirectMessage').textContent = `Redirecting to ${method}...`;
+                
+                // In a real app, you would process payment here
+                console.log(`Processing payment with ${method}`);
+                
+                // Simulate payment processing delay
+                setTimeout(function() {
+                    // Show message about opening payment app
+                    document.getElementById('redirectMessage').textContent = `If you are not redirected automatically, please click here to open ${method}`;
+                    
+                    // In a real app, you would redirect to the payment gateway
+                    // For demo purposes, we'll simulate a successful payment after a delay
+                    setTimeout(function() {
+                        // Simulate successful payment
+                        processingPage.style.display = 'none';
+                        confirmationPage.style.display = 'flex';
+                        
+                        // Start countdown timer
+                        updateCountdown();
+                        setInterval(updateCountdown, 1000);
+                    }, 3000);
+                    
+                    // In a real implementation, you would redirect to the payment gateway:
+                    // window.location.href = redirectUrl;
+                }, 2000);
+            }
+        });
+    </script>
+</body>
+</html>
