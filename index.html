@@ -1,0 +1,738 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Online Event Registration Portal</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        /* Reset and Base Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', Arial, sans-serif;
+        }
+
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
+        body {
+            line-height: 1.6;
+            background-color: #0a192f;
+            color: #e6f1ff;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        /* Starry Background */
+        #stars-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            overflow: hidden;
+        }
+
+        .star {
+            position: absolute;
+            background-color: #fff;
+            border-radius: 50%;
+            animation: twinkle var(--duration) infinite ease-in-out;
+        }
+
+        @keyframes twinkle {
+            0%, 100% { opacity: 0.2; }
+            50% { opacity: 1; }
+        }
+
+        /* Laptop Animation Styles */
+        .laptop-container {
+            position: absolute;
+            width: 100%;
+            height: 100px;
+            overflow: hidden;
+            top: 50px;
+            left: 0;
+            z-index: 0;
+        }
+
+        .laptop-emoji {
+            position: absolute;
+            font-size: 2rem;
+            opacity: 0.7;
+            animation: floatLaptop linear infinite;
+            z-index: 0;
+        }
+
+        @keyframes floatLaptop {
+            0% {
+                transform: translateY(0) translateX(-100px) rotate(0deg);
+            }
+            100% {
+                transform: translateY(-100px) translateX(calc(100vw + 100px)) rotate(360deg);
+            }
+        }
+
+        /* Container Styles */
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Header Styles */
+        header {
+            background: linear-gradient(135deg, #2c3e50 0%, #1a2639 100%);
+            color: white;
+            text-align: center;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            border-radius: 0 0 20px 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+            animation: rotate 20s linear infinite;
+            z-index: 0;
+        }
+
+        @keyframes rotate {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        header h1 {
+            position: relative;
+            z-index: 1;
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+            background: linear-gradient(90deg, #64ffda, #ae6764);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 0 10px rgba(100, 255, 218, 0.3);
+        }
+
+        header p {
+            position: relative;
+            z-index: 1;
+            opacity: 0.8;
+        }
+
+        /* Form Styles */
+        .form-container {
+            background: rgba(10, 25, 47, 0.8);
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            padding: 30px;
+            margin: 30px 0;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(100, 255, 218, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .form-container:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.4);
+        }
+
+        .form-container h2 {
+            color: #64ffda;
+            margin-bottom: 20px;
+            font-size: 1.8rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+            position: relative;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #ccd6f6;
+            font-weight: 500;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid rgba(100, 255, 218, 0.2);
+            border-radius: 8px;
+            background-color: rgba(10, 25, 47, 0.5);
+            color: #e6f1ff;
+            font-size: 16px;
+            transition: all 0.3s ease;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #64ffda;
+            box-shadow: 0 0 0 2px rgba(100, 255, 218, 0.2);
+        }
+
+        .form-group input::placeholder {
+            color: rgba(204, 214, 246, 0.5);
+        }
+
+        .btn {
+            display: inline-block;
+            background: linear-gradient(135deg, #ae6764 0%, #842d27 100%);
+            color: white;
+            padding: 12px 30px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            box-shadow: 0 4px 15px rgba(174, 103, 100, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 7px 20px rgba(174, 103, 100, 0.4);
+        }
+
+        .btn:active {
+            transform: translateY(1px);
+        }
+
+        .btn::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(255,255,255,0.2) 0%, transparent 100%);
+            transform: translateX(-100%);
+            transition: transform 0.3s ease;
+        }
+
+        .btn:hover::after {
+            transform: translateX(0);
+        }
+
+        /* Event List Styles */
+        #eventListSection {
+            margin: 50px 0;
+        }
+
+        #eventListSection h2 {
+            font-size: 2rem;
+            margin-bottom: 30px;
+            color: #64ffda;
+            text-align: center;
+            position: relative;
+            display: inline-block;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        #eventListSection h2::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: linear-gradient(90deg, #64ffda, #ae6764);
+            border-radius: 3px;
+        }
+
+        .event-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+        }
+
+        .event-card {
+            background: rgba(10, 25, 47, 0.8);
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            padding: 25px;
+            text-align: center;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(100, 255, 218, 0.1);
+            backdrop-filter: blur(5px);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .event-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.4);
+            border-color: rgba(100, 255, 218, 0.3);
+        }
+
+        .event-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: linear-gradient(90deg, #64ffda, #ae6764);
+        }
+
+        .event-card h3 {
+            margin-bottom: 15px;
+            color: #64ffda;
+            font-size: 1.5rem;
+        }
+
+        .event-card p {
+            margin-bottom: 10px;
+            color: #ccd6f6;
+        }
+
+        .event-card .price {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: #e6f1ff;
+            margin: 15px 0;
+        }
+
+        .event-card .seats {
+            display: inline-block;
+            padding: 5px 10px;
+            background-color: rgba(100, 255, 218, 0.1);
+            border-radius: 20px;
+            color: #64ffda;
+            font-size: 0.9rem;
+        }
+
+        .event-card .date {
+            color: #ae6764;
+            font-weight: 600;
+        }
+
+        /* Featured Event */
+        .featured-event {
+            grid-column: 1 / -1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            padding: 40px;
+            background: linear-gradient(135deg, rgba(10, 25, 47, 0.9) 0%, rgba(44, 62, 80, 0.9) 100%);
+            position: relative;
+        }
+
+        .featured-event::after {
+            content: 'FEATURED';
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: #ae6764;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: bold;
+        }
+
+        .featured-event h3 {
+            font-size: 2rem;
+            margin-bottom: 15px;
+        }
+
+        .featured-event .btn {
+            margin-top: 20px;
+            padding: 15px 40px;
+        }
+
+        /* Notification */
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: rgba(10, 25, 47, 0.9);
+            color: #64ffda;
+            padding: 15px 25px;
+            border-radius: 8px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            border-left: 5px solid #64ffda;
+            transform: translateX(200%);
+            transition: transform 0.3s ease;
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .notification.show {
+            transform: translateX(0);
+        }
+
+        /* Loading Spinner */
+        .spinner {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(10, 25, 47, 0.8);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+        }
+
+        .spinner.active {
+            display: flex;
+        }
+
+        .spinner-circle {
+            width: 50px;
+            height: 50px;
+            border: 5px solid rgba(100, 255, 218, 0.2);
+            border-radius: 50%;
+            border-top-color: #64ffda;
+            animation: spin 1s linear infinite;
+            margin-bottom: 20px;
+        }
+
+        @keyframes spin {
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Responsive Adjustments */
+        @media (max-width: 768px) {
+            .container {
+                width: 95%;
+                padding: 10px;
+            }
+
+            header h1 {
+                font-size: 2rem;
+            }
+
+            .event-list {
+                grid-template-columns: 1fr;
+            }
+
+            .featured-event {
+                padding: 30px 20px;
+            }
+        }
+
+        /* Floating Animation */
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .floating {
+            animation: float 6s ease-in-out infinite;
+        }
+    </style>
+</head>
+<body>
+    <!-- Laptop Emojis Animation -->
+    <div class="laptop-container" id="laptopContainer"></div>
+
+    <!-- Starry Background -->
+    <div id="stars-container"></div>
+
+    <!-- Loading Spinner -->
+    <div class="spinner" id="spinner">
+        <div class="spinner-circle"></div>
+        <p>Processing your request...</p>
+    </div>
+
+    <!-- Notification -->
+    <div class="notification" id="notification">
+        <i class="fas fa-check-circle"></i>
+        <span id="notification-text">Registration Successful!</span>
+    </div>
+
+    <header class="floating">
+        <h1>Online Event Registration Portal</h1>
+        <p>Discover and register for exciting upcoming events</p>
+    </header>
+
+    <div class="container">
+        <!-- User Registration Form -->
+        <div class="form-container" id="registrationSection">
+            <h2><i class="fas fa-user-plus"></i> User Registration</h2>
+            <form id="userRegistrationForm">
+                <div class="form-group">
+                    <label for="username"><i class="fas fa-user"></i> Username</label>
+                    <input type="text" id="username" name="username" required placeholder="Enter your username">
+                </div>
+                <div class="form-group">
+                    <label for="email"><i class="fas fa-envelope"></i> Email</label>
+                    <input type="email" id="email" name="email" required placeholder="Enter your email">
+                </div>
+                <div class="form-group">
+                    <label for="password"><i class="fas fa-lock"></i> Password</label>
+                    <input type="password" id="password" name="password" required placeholder="Create a password">
+                </div>
+                <div class="form-group">
+                    <label for="full_name"><i class="fas fa-id-card"></i> Full Name</label>
+                    <input type="text" id="full_name" name="full_name" placeholder="Your full name">
+                </div>
+                <div class="form-group">
+                    <label for="phone"><i class="fas fa-phone"></i> Phone Number</label>
+                    <input type="tel" id="phone" name="phone" placeholder="Your contact number">
+                </div>
+                <button type="submit" class="btn"><i class="fas fa-user-plus"></i> Register</button>
+            </form>
+        </div>
+
+        <!-- Event List Section -->
+        <div id="eventListSection">
+            <h2><i class="fas fa-calendar-alt"></i> Upcoming Events</h2>
+            <div class="event-list" id="eventList">
+                <!-- Events will be dynamically populated here -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Create starry background
+        function createStars() {
+            const container = document.getElementById('stars-container');
+            const starCount = 100;
+            
+            for (let i = 0; i < starCount; i++) {
+                const star = document.createElement('div');
+                star.classList.add('star');
+                
+                // Random size between 1px and 3px
+                const size = Math.random() * 2 + 1;
+                star.style.width = `${size}px`;
+                star.style.height = `${size}px`;
+                
+                // Random position
+                star.style.left = `${Math.random() * 100}%`;
+                star.style.top = `${Math.random() * 100}%`;
+                
+                // Random animation duration between 2s and 5s
+                const duration = Math.random() * 3 + 2;
+                star.style.setProperty('--duration', `${duration}s`);
+                
+                container.appendChild(star);
+            }
+        }
+
+        // Create floating laptop emojis
+        function createLaptops() {
+            const container = document.getElementById('laptopContainer');
+            const laptopCount = 8;
+            const emojis = ['💻', '🖥️', '⌨️', '🖱️', '📱', '📲', '🔌', '💾'];
+            
+            for (let i = 0; i < laptopCount; i++) {
+                const laptop = document.createElement('div');
+                laptop.classList.add('laptop-emoji');
+                laptop.textContent = emojis[i % emojis.length];
+                
+                // Random position and animation
+                const startY = Math.random() * 100;
+                const duration = Math.random() * 15 + 10;
+                const delay = Math.random() * 5;
+                
+                laptop.style.top = `${startY}px`;
+                laptop.style.left = `${Math.random() * 100}px`;
+                laptop.style.animation = `floatLaptop ${duration}s ${delay}s infinite linear`;
+                laptop.style.fontSize = `${Math.random() * 1 + 1.5}rem`;
+                
+                container.appendChild(laptop);
+            }
+        }
+
+        // Sample Event Data
+        const events = [
+            {
+                id: 1,
+                name: "Tech Conference 2024",
+                description: "Annual technology conference featuring the latest innovations in AI, blockchain, and cloud computing.",
+                date: "September 15, 2024",
+                location: "Silicon Valley, CA",
+                availableSeats: 250,
+                price: 299.99,
+                featured: true
+            },
+            {
+                id: 2,
+                name: "Web Development Workshop",
+                description: "Hands-on web development training with modern frameworks like React, Vue, and Angular.",
+                date: "July 22, 2024",
+                location: "New York, NY",
+                availableSeats: 100,
+                price: 199.50,
+                featured: false
+            },
+            {
+                id: 3,
+                name: "AI Innovation Summit",
+                description: "Exploring the future of artificial intelligence with industry leaders and researchers.",
+                date: "October 10, 2024",
+                location: "Boston, MA",
+                availableSeats: 150,
+                price: 349.99,
+                featured: false
+            },
+            {
+                id: 4,
+                name: "Digital Marketing Expo",
+                description: "Learn cutting-edge digital marketing strategies from top influencers and marketers.",
+                date: "August 5, 2024",
+                location: "Chicago, IL",
+                availableSeats: 180,
+                price: 249.99,
+                featured: false
+            },
+            {
+                id: 5,
+                name: "Data Science Bootcamp",
+                description: "Intensive training on data analysis, machine learning, and data visualization.",
+                date: "November 18, 2024",
+                location: "Seattle, WA",
+                availableSeats: 75,
+                price: 399.99,
+                featured: false
+            }
+        ];
+
+        // Show notification
+        function showNotification(message, isSuccess = true) {
+            const notification = document.getElementById('notification');
+            const notificationText = document.getElementById('notification-text');
+            
+            notificationText.textContent = message;
+            notification.style.borderLeftColor = isSuccess ? '#64ffda' : '#ae6764';
+            
+            // Change icon based on success/error
+            const icon = notification.querySelector('i');
+            icon.className = isSuccess ? 'fas fa-check-circle' : 'fas fa-exclamation-circle';
+            
+            notification.classList.add('show');
+            
+            setTimeout(() => {
+                notification.classList.remove('show');
+            }, 3000);
+        }
+
+        // Show loading spinner
+        function showLoading(show) {
+            const spinner = document.getElementById('spinner');
+            if (show) {
+                spinner.classList.add('active');
+            } else {
+                spinner.classList.remove('active');
+            }
+        }
+
+        // User Registration Form Handler
+        document.getElementById('userRegistrationForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            showLoading(true);
+            
+            const formData = {
+                username: document.getElementById('username').value,
+                email: document.getElementById('email').value,
+                password: document.getElementById('password').value,
+                full_name: document.getElementById('full_name').value,
+                phone: document.getElementById('phone').value
+            };
+
+            // Simulate API call with timeout
+            setTimeout(() => {
+                // Simulated registration process
+                console.log('Registration Data:', formData);
+                showLoading(false);
+                showNotification('Registration Successful!');
+                
+                // Reset form
+                this.reset();
+            }, 1500);
+        });
+
+        // Event Rendering Function
+        function renderEvents() {
+            const eventList = document.getElementById('eventList');
+            eventList.innerHTML = '';
+            
+            events.forEach(event => {
+                const eventCard = document.createElement('div');
+                eventCard.classList.add('event-card');
+                if (event.featured) {
+                    eventCard.classList.add('featured-event');
+                }
+                
+                eventCard.innerHTML = `
+                    <h3>${event.name}</h3>
+                    <p>${event.description}</p>
+                    <p class="date"><i class="far fa-calendar-alt"></i> ${event.date}</p>
+                    <p><i class="fas fa-map-marker-alt"></i> ${event.location}</p>
+                    <p class="seats"><i class="fas fa-chair"></i> ${event.availableSeats} seats remaining</p>
+                    <p class="price">$${event.price.toFixed(2)}</p>
+                    <button onclick="registerForEvent(${event.id})" class="btn">
+                        <i class="fas fa-ticket-alt"></i> Register Now
+                    </button>
+                `;
+                eventList.appendChild(eventCard);
+            });
+        }
+
+        // Event Registration Function
+        function registerForEvent(eventId) {
+            showLoading(true);
+            
+            setTimeout(() => {
+                const event = events.find(e => e.id === eventId);
+                
+                if (event.availableSeats > 0) {
+                    showNotification(`Successfully registered for ${event.name}!`);
+                    event.availableSeats--;
+                    
+                    // Re-render events to update available seats
+                    renderEvents();
+                } else {
+                    showNotification('Sorry, no seats available for this event.', false);
+                }
+                
+                showLoading(false);
+            }, 1000);
+        }
+
+        // Initialize on Page Load
+        document.addEventListener('DOMContentLoaded', () => {
+            createStars();
+            createLaptops();
+            renderEvents();
+            
+            // Add floating animation to random event cards
+            setTimeout(() => {
+                const cards = document.querySelectorAll('.event-card:not(.featured-event)');
+                const randomIndex = Math.floor(Math.random() * cards.length);
+                cards[randomIndex].classList.add('floating');
+            }, 500);
+        });
+    </script>
+</body>
+</html>
